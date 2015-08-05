@@ -44,6 +44,7 @@ classvars:
    viSpell_level = 2
    viSpellExertion = 1
    viMana = 8
+   viStroke = $
 
    viMin_Damage = 4
    viMax_Damage = 10
@@ -70,13 +71,13 @@ properties:
    viStroke = $
 
    % This is the list of spells we can choose from.
-   plRandomSpells = $
+   plRandomStrokes = $
 
 messages:
 
    Constructor()
    {
-      plRandomSpells = [ SID_TOUCH_OF_FLAME, SID_ZAP,
+      plRandomStrokes = [ SID_TOUCH_OF_FLAME, SID_ZAP,
                          SID_ICY_FINGERS, SID_ACID_TOUCH ];
 
       propagate;
@@ -90,14 +91,14 @@ messages:
       return;
    }
    
-   GetAttackSpell()
+   GetStroke()
    {
       if viStroke = $
       {
          return $;
       }
 
-      return Send(Send(SYS,@FindSpellByNum,#num=viStroke),@GetAttackSpell);
+      return Send(Send(SYS,@FindSpellByNum,#num=viStroke),@GetTouchAttackSpell);
    }
 
    % This is for the attack message infrastructure.
