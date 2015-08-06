@@ -39,12 +39,15 @@ classvars:
    vrIcon = IllusionaryTouch_icon_rsc
    vrDesc = IllusionaryTouch_desc_rsc
 
+   viIndefinite = ARTICLE_NONE
+   viDefinite = ARTICLE_NONE
+
    viSpell_num = SID_ILLUSIONARY_TOUCH
    viSchool = SS_RIIJA
    viSpell_level = 2
    viSpellExertion = 1
    viMana = 8
-   viStroke = $
+   viStroke = 0
 
    viMin_Damage = 4
    viMax_Damage = 10
@@ -90,7 +93,7 @@ messages:
 
       return;
    }
-   
+
    GetStroke()
    {
       if viStroke = $
