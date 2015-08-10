@@ -94,16 +94,6 @@ messages:
       return;
    }
 
-   GetStroke()
-   {
-      if viStroke = $
-      {
-         return $;
-      }
-
-      return Send(Send(SYS,@FindSpellByNum,#num=viStroke),@GetTouchAttackSpell);
-   }
-
    % This is for the attack message infrastructure.
    GetAttackName()
    {
