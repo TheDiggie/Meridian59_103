@@ -1779,6 +1779,7 @@
 
    TID_EASTER_BUNNY  = 63
    TID_KILLER_BUNNY  = 64
+   TID_MIMIC = 65
 
    TID_XEO_AIR       = 65
    TID_XEO_EARTH     = 66
