@@ -3879,6 +3879,8 @@ messages:
       Create(&XeoNeruTreasure);
       Create(&XeoIllTreasure);
 
+      Create(&MimicTreasure);
+
       return;
    }
 
