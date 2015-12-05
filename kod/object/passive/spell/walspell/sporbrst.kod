@@ -24,9 +24,8 @@ resources:
       "Summons forth noxious clouds that paralyze any within it's bounds.  "
       "Requires potent reagents specific to both Qor and Faren."
       
-   SporeBurst_cast_rsc = \
-      "Following a loud popping sound, the room is filled with a cloud of "
-      "choking spore mold."
+   SporeBurst_caster = "A noxious cloud appears around %s%q."
+   SporeBurst_target = "A noxious cloud surrounds you!"
    SporeBurst_failed_rsc = \
       "There is too much summoning magic focused here to cause a spore burst."
    SporeBurst_sound = farenspore822m.wav
@@ -62,6 +61,8 @@ classvars:
 
    vrSummonLimitMsg = SporeBurst_failed_rsc
 
+   vbTargetSpore = TRUE
+
 properties:
 
 
@@ -76,24 +77,55 @@ messages:
       return;
    }
 
-   CastSpell(who = $, lTargets = $, iSpellPower = 0)
+   CastSpell(who=$,lTargets=$,iSpellPower=0)
    {
-      Send(who,@MsgSendUser,#message_rsc=SporeBurst_cast_rsc);
+      local oTarget;
+
+      if lTargets = $
+      {
+         Debug("Spore burst cast will nil target list");
+
+         return;
+      }
+
+      oTarget = First(lTargets);
+
+      if oTarget = $
+      {
+         Debug("Spore burst cast will nil target");
+
+         return;
+      }
+
+      Send(oTarget,@MsgSendUser,#message_rsc=SporeBurst_target,
+            #parm1=Send(oTarget,@GetCapDef),#parm2=Send(oTarget,@GetName));
+
+      Send(who,@MsgSendUser,#message_rsc=SporeBurst_caster);
 
       propagate;
    }
 
+   GetNumSpellTargets()
+   {
+      return vbTargetSpore;
+   }
+
    PlaceWallElements(who=$,lTargets=$,iSpellPower=0)
    {
-      local oRoom, iRow, iCol, iFine_Row, iFine_Col, iXStep, iYStep,
-            iAngle, iDuration, iHalfrow, iHalfCol, iHalfFine_Row,
-            iHalfFine_Col, oPassiveFog, oTarget, oActiveFog;
+      local i, oRoom, iCounter, iDiff, oActiveFog, oPassiveFog, iRadius,
+            iDuration, iRow, iCol, oTarget, iAngle, iFine_Row, iFine_Col,
+            iXStep, iYStep, iHalfrow, iHalfCol, iHalfFine_Row,
+            iHalfFine_Col;
+
+      if (lTargets = $)
+      {
+         return;
+      }
 
       oTarget = First(lTargets);
 
       iAngle = Send(oTarget,@GetAngle);
-      iDuration = (iSpellPower * 2) + 30;
-      iDuration = Bound(iDuration,30,180);
+      iDuration = Send(self,@GetDuration,#iSpellpower=iSpellpower);
 
       oRoom = Send(oTarget,@GetOwner);
 
@@ -104,65 +136,65 @@ messages:
       Send(oRoom,@NewHold,#what=oActiveFog,#new_row=(iRow+1),#new_col=(iCol+1),
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
-      % Create fire in eight cardinal directions
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      % Create fog in eight cardinal directions
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=(iRow+1),#new_col=(iCol+1),
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=(iRow+1),#new_col=iCol,
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=(iRow+1),#new_col=(iCol-1),
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=iRow,#new_col=(iCol+1),
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=iRow,#new_col=(iCol-1),
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=(iRow-1),#new_col=(iCol+1),
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=(iRow-1),#new_col=iCol,
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=(iRow-1),#new_col=(iCol-1),
            #fine_row=FINENESS_HALF,#fine_col=FINENESS_HALF);
 
 
-      % Create four "filler" elements in corners.
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      % Create four "filler" fog in corners.
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=iRow,#new_col=iCol,
            #fine_row=0,#fine_col=0);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=iRow,#new_col=iCol,
            #fine_row=0,#fine_col=FINENESS);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=iRow,#new_col=iCol,
            #fine_row=FINENESS,#fine_col=0);
 
-      oPassiveFog = Create(&SporeCloud,#Caster=who,
+      oPassiveFog = Create(&SporeCloud,#Caster=who,#Active_Elem=oActiveFog,
                         #Duration=iDuration);
       Send(oRoom,@NewHold,#what=oPassiveFog,#new_row=iRow,#new_col=iCol,
            #fine_row=FINENESS,#fine_col=FINENESS);
