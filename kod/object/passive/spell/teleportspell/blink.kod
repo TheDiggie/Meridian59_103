@@ -31,8 +31,6 @@ classvars:
    vrIcon = blink_icon_rsc
    vrDesc = blink_desc_rsc
 
-   viCast_time = 10000
-
    vrSpell_intro = blink_spell_intro
 
    viSpell_num = SID_BLINK
