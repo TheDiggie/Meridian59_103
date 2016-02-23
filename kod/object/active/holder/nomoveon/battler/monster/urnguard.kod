@@ -8,7 +8,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-UrnGaurd is Monster
+UrnGuard is Monster
 
 constants:
 
@@ -16,29 +16,29 @@ constants:
 
 resources:
 
-   UrnGaurd_koc_name_rsc = "unchaleocon"
-   UrnGaurd_name_rsc = "Gaurdian of the Urn"
-   UrnGaurd_icon_rsc = skelbody.bgf
-   UrnGaurd_desc_rsc = \
+   UrnGuard_koc_name_rsc = "unchaleocon"
+   UrnGuard_name_rsc = "Guardian of the Urn"
+   UrnGuard_icon_rsc = skelbody.bgf
+   UrnGuard_desc_rsc = \
       "Towering in size what one could only picture to be the animate corspe of"
-      " a giant.  This created was created by very powerful dark magic, and with a ""
+      " a giant.  This created was created by very powerful dark magic, and with a "
       "purpose..."
 
-   UrnGaurd_dead_icon_rsc = urnGX.bgf
-   UrnGaurd_dead_name_rsc = "pile of bones"
+   UrnGuard_dead_icon_rsc = urnGX.bgf
+   UrnGuard_dead_name_rsc = "pile of bones"
 
-   UrnGaurd_sound_miss = skl2_atkm.wav
-   UrnGaurd_sound_death = skl2_dth.wav
-   UrnGaurd_sound_aware = skl2_awr.wav
+   UrnGuard_sound_miss = skl2_atkm.wav
+   UrnGuard_sound_death = skl2_dth.wav
+   UrnGuard_sound_aware = skl2_awr.wav
 
 classvars:
 
-   vrKocName = UrnGaurd_koc_name_rsc
-   vrName = UrnGaurd_name_rsc
-   vrIcon = UrnGaurd_icon_rsc
-   vrDesc = UrnGaurd_desc_rsc
-   vrDead_icon = UrnGaurd_dead_icon_rsc
-   vrDead_name = UrnGaurd_dead_name_rsc
+   vrKocName = UrnGuard_koc_name_rsc
+   vrName = UrnGuard_name_rsc
+   vrIcon = UrnGuard_icon_rsc
+   vrDesc = UrnGuard_desc_rsc
+   vrDead_icon = UrnGuard_dead_icon_rsc
+   vrDead_name = UrnGuard_dead_name_rsc
    
    viCashmin = 40000
    viCashmax = 50000
@@ -48,28 +48,29 @@ classvars:
    viAttributes = 0
    viLevel = 350
    viDifficulty = 10
-   viVisionDistance = 20
+   viVisionDistance = 40
    viKarma = -100
    vbIsUndead = TRUE
    viDefault_behavior = AI_FIGHT_HYPERAGGRESSIVE | AI_FIGHT_SWITCHALOT \
-                        AI_FIGHT_WIZARD_KILLER
+                       | AI_FIGHT_WIZARD_KILLER
 
-   vrSound_miss = UrnGaurd_sound_miss
-   vrSound_aware = UrnGaurd_sound_aware
-   vrSound_death = UrnGaurd_sound_death
+   vrSound_miss = UrnGuard_sound_miss
+   vrSound_aware = UrnGuard_sound_aware
+   vrSound_death = UrnGuard_sound_death
 
-   UrnGaurd_first_stage = \
-      "The Gaurdian slams his sword to the ground and summons forth some zombies!"
-   UrnGaurd_second_stage = \
-      "The Gaurdian slams his sword to the ground and summons forth some tusked skeletons!"
-   UrnGaurd_third_stage = \
-      "The Gaurdian slams his sword to the ground and summons forth some daemon skeletons!"
-   UrnGaurd_fourth_stage = \
-      "The Gaurdian slams his sword to the ground and summons forth a dark angel!"
+   UrnGuard_first_stage = \
+      "The Guardian slams his sword to the ground and summons forth some zombies!"
+   UrnGuard_second_stage = \
+      "The Guardian slams his sword to the ground and summons forth some tusked skeletons!"
+   UrnGuard_third_stage = \
+      "The Guardian slams his sword to the ground and summons forth some daemon skeletons!"
+   UrnGuard_fourth_stage = \
+      "The Guardian slams his sword to the ground and summons forth a dark angel!"
 
 properties:
 
    piAnimation = ANIM_NONE
+   plAttackers = $
 
    piReputationGroup = REP_UNDEAD
 
@@ -128,6 +129,7 @@ messages:
       if pbInvincible
       {
          Send(self,@ClearBehavior);
+         piBehavior = AI_NPC;
          Send(poOwner,@SomethingChanged,#what=self);
       }
 
@@ -145,7 +147,7 @@ messages:
          {
             % Summon zombies
             pbFirstStage = TRUE;
-            Send(poOwner,@SomeoneSaid,#what=self,#string=UrnGaurd_first_stage,#type=SAY_MESSAGE);
+            Send(poOwner,@SomeoneSaid,#what=self,#string=UrnGuard_first_stage,#type=SAY_MESSAGE);
             cMonster = &Zombie;
             Send(self,@MonsterSummonStage,#lTargets=plAttackers,#cMonster=cMonster);
          }
@@ -156,7 +158,7 @@ messages:
             {
                % Summon tusked skeletons
                pbSecondStage = TRUE;
-               Send(poOwner,@SomeoneSaid,#what=self,#string=UrnGaurd_second_stage,#type=SAY_MESSAGE);
+               Send(poOwner,@SomeoneSaid,#what=self,#string=UrnGuard_second_stage,#type=SAY_MESSAGE);
                cMonster = &TuskedSkeleton;
                Send(self,@MonsterSummonStage,#lTargets=plAttackers,#cMonster=cMonster);
             }
@@ -167,7 +169,7 @@ messages:
                {
                   % Summon daemon skeletons
                   pbThirdStage = TRUE;
-                  Send(poOwner,@SomeoneSaid,#what=self,#string=UrnGaurd_third_stage,#type=SAY_MESSAGE);
+                  Send(poOwner,@SomeoneSaid,#what=self,#string=UrnGuard_third_stage,#type=SAY_MESSAGE);
                   cMonster = &DaemonSkeleton;
                   Send(self,@MonsterSummonStage,#lTargets=plAttackers,#cMonster=cMonster);
                }
@@ -178,13 +180,29 @@ messages:
                   {
                      % Summon a dark angel
                      pbFourthStage = TRUE;
-                     Send(poOwner,@SomeoneSaid,#what=self,#string=UrnGaurd_fourth_stage,#type=SAY_MESSAGE);
+                     Send(poOwner,@SomeoneSaid,#what=self,#string=UrnGuard_fourth_stage,#type=SAY_MESSAGE);
                      Send(self,@FinalSummonStage,#oTarget=what);
                   }
                }
             }
          }
       }
+
+      foreach i in plAttackers
+      {
+         if i = what
+         {
+            propagate;
+         }
+      }
+
+      if IsClass(what,&Player)
+      {
+         plAttackers = Cons(what,plAttackers);
+      }
+
+      propagate;
+   }
 
    % Used for defense messages
    GetParryAbility(stroke_obj=$)
@@ -254,8 +272,7 @@ messages:
          oBody = Create(&DeadBody,
                         #victim=self,
                         #killer=killer,
-                        #drawfx=viDead_drawfx,
-                        #PlayerBodyOverlay=vrHeadIcon);
+                        #drawfx=viDead_drawfx);
       }
 
       return oBody;
